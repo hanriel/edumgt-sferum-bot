@@ -3,11 +3,10 @@ import requests
 
 from asyncio import sleep
 
-from vk.methods import get_credentials, get_user_credentials, get_message
-from tg.methods import send_message
+from vk.methods import get_credentials, get_user_credentials, get_message, send_message
 from vk.types import Message, EventMessage
 
-async def main(server, key, ts, tg_chat_id, vk_chat_ids, access_token, cookie, pts, bot):
+async def main(server, key, ts, vk_chat_ids, access_token, cookie, pts, ):
     data = {
         "act": "a_check",
         "key": key,
@@ -22,7 +21,6 @@ async def main(server, key, ts, tg_chat_id, vk_chat_ids, access_token, cookie, p
             if req.get("updates"):
                 data["ts"] += 1
                 event = req["updates"][0]
-
                 if event[0] == 4:
                     raw_msg = EventMessage(*event)
                     logging.info(f"[MAIN] raw_msg: {raw_msg}")
@@ -47,7 +45,9 @@ async def main(server, key, ts, tg_chat_id, vk_chat_ids, access_token, cookie, p
                         message, profile, chat_title = message["items"], message["profiles"], message["title"]
     
                         msg = Message(**message[-1], profiles=profile, chat_title=chat_title)
-                        await send_message(bot, msg, tg_chat_id)
+                        logging.info(msg)
+                        if msg.sender_id == '874051109':
+                            send_message(access_token, msg.sender_id, "Планы на этот день:")
                     else:
                         pts += 1
                     

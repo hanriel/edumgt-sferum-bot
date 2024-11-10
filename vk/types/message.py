@@ -76,7 +76,7 @@ class Message:
         
     def __repr__(self) -> str:
         sender = self.__dict__.get("full_name", self.sender_id)
-        string = f" from {sender}: {self.text}, chat id: {self.chat_id}" 
+        string = f" from {sender}: {self.text}, chat id: {self.peer_id}" 
         if self.media:
             string += f", media: {self.media}"
         if self.fwd:
